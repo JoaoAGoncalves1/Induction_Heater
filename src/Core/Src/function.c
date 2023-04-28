@@ -7,7 +7,6 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
-#include "main.h"
 #include "usart.h"
 #include "gpio.h"
 #include "function.h"
@@ -24,8 +23,8 @@ volatile uint16_t w_rx_bindex = 0, r_tx_bindex = 0,  r_rx_bindex = 0, w_tx_binde
 char *comando, *token, *aux_token, *memo_comando, *memo_valid_comando, *message, temp_arr[20], *memory_ptr;
 
 void uart_commands(void){
-
-	char *com_arr[] = {"SD"};
+	static machine_state state = state_stand_by;
+	char *com_arr[] = {"ON"};
 
  		if(((w_rx_bindex-r_rx_bindex) != 0) && (new_com >0) ){
 
@@ -44,7 +43,15 @@ void uart_commands(void){
 
 			switch(find_com(com_arr, token, 27)){
 			case 0:
-				_push_message("Funciona");
+				if (state == state_stand_by || state == state_yellow){
+						//Start PWM
+						//Start medidodres de tem
+					turn_on_heater();
+					break;
+				}
+				else
+					_push_message("Erro");
+
 				break;
 				default:
 					_push_message("INVALID COMMAND!\n");
@@ -56,9 +63,7 @@ void uart_commands(void){
 			//append_char('>');
 			start_tx();
 	}
-
- 	if(tx_flag)
- 	{
+ 	if(tx_flag){
  		start_tx();
  		tx_flag = FALSE;
  	}

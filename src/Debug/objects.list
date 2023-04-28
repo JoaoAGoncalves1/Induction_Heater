@@ -1,5 +1,6 @@
 "./Core/Src/function.o"
 "./Core/Src/gpio.o"
+"./Core/Src/heater.o"
 "./Core/Src/main.o"
 "./Core/Src/stm32f7xx_hal_msp.o"
 "./Core/Src/stm32f7xx_it.o"

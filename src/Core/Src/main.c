@@ -25,6 +25,7 @@
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 #include "function.h"
+#include "heater.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -103,6 +104,8 @@ int main(void)
   MX_USART3_UART_Init();
   MX_TIM2_Init();
   /* USER CODE BEGIN 2 */
+  HAL_TIM_Base_Start_IT(&htim2);
+  HAL_TIM_PWM_Start(&htim2, TIM_CHANNEL_1);
   setvbuf(stdin, NULL, _IONBF, 0);
   HAL_UART_Receive_IT(&huart3, (uint8_t *)&rx_data, 1);
   append_char('>');
@@ -114,8 +117,9 @@ int main(void)
   while (1)
   {
     /* USER CODE END WHILE */
-	  uart_commands();
+
     /* USER CODE BEGIN 3 */
+	  uart_commands();
   }
   /* USER CODE END 3 */
 }
