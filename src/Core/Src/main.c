@@ -18,12 +18,16 @@
 /* USER CODE END Header */
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
+#include "tim.h"
 #include "usart.h"
 #include "gpio.h"
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-
+#include "function.h"
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -54,7 +58,18 @@ void SystemClock_Config(void);
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
+int __io_putchar(int ch){
+	HAL_UART_Transmit(&huart3, (uint8_t *)&ch, 1, HAL_MAX_DELAY);
+	return ch;
+}
+int __io_getchar(void){
+	uint8_t ch = 0;
+	__HAL_UART_CLEAR_OREFLAG(&huart3);
+	HAL_UART_Receive(&huart3, (uint8_t *)&ch, 1, HAL_MAX_DELAY);
+	HAL_UART_Transmit(&huart3,(uint8_t *)&ch, 1, HAL_MAX_DELAY);
+	return ch;
 
+}
 /* USER CODE END 0 */
 
 /**
@@ -86,8 +101,12 @@ int main(void)
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
   MX_USART3_UART_Init();
+  MX_TIM2_Init();
   /* USER CODE BEGIN 2 */
-
+  setvbuf(stdin, NULL, _IONBF, 0);
+  HAL_UART_Receive_IT(&huart3, (uint8_t *)&rx_data, 1);
+  append_char('>');
+  start_tx();
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -95,7 +114,7 @@ int main(void)
   while (1)
   {
     /* USER CODE END WHILE */
-
+	  uart_commands();
     /* USER CODE BEGIN 3 */
   }
   /* USER CODE END 3 */

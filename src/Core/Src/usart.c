@@ -21,7 +21,24 @@
 #include "usart.h"
 
 /* USER CODE BEGIN 0 */
-
+#define RCC_base 0x40023800
+#define RCC_USART3EN 1
+#define RCC_USART3EN_pos 18
+#define UART3SEL 0b01
+#define UART3SEL_pos 4
+#define GPIOD_base 0x40020C00
+#define MODER9 0b10
+#define MODER9_pos 18
+#define MODER8 0b10
+#define MODER8_pos 16
+#define OSPEEDR9 0b11
+#define OSPEEDR9_pos 18
+#define OSPEEDR8 0b11
+#define OSPEEDR8_pos 16
+#define AFR9 0b0111
+#define AFR9_pos 4
+#define AFR8 0b0111
+#define AFR8_pos 0
 /* USER CODE END 0 */
 
 UART_HandleTypeDef huart3;
@@ -98,6 +115,29 @@ void HAL_UART_MspInit(UART_HandleTypeDef* uartHandle)
     HAL_NVIC_EnableIRQ(USART3_IRQn);
   /* USER CODE BEGIN USART3_MspInit 1 */
 
+    uint32_t *ptr_RCC_RCC_APB1ENR = RCC_base + 0x40;
+    uint32_t *ptr_RCC_RCC_DCKCFGR2 = RCC_base + 0x90;
+    uint32_t *ptr_GPIOD_GPIOx_MODER = GPIOD_base + 0x0;
+    uint32_t *ptr_GPIOD_GPIOx_OSPEEDR = GPIOD_base + 0x08;
+    uint32_t *ptr_GPIOD_GPIOx_AFRH = GPIOD_base + 0x24;
+
+    *ptr_RCC_RCC_DCKCFGR2 |= (UART3SEL) << UART3SEL_pos;// configurar o clock da USART3
+
+    *ptr_RCC_RCC_APB1ENR |= (RCC_USART3EN) << RCC_USART3EN_pos; //enable ao clock da USART3
+
+    __HAL_RCC_GPIOD_CLK_ENABLE();
+
+     *ptr_GPIOD_GPIOx_MODER |= (MODER9) << MODER9_pos; // TX & RX
+     *ptr_GPIOD_GPIOx_MODER |= (MODER8) << MODER8_pos;
+
+     *ptr_GPIOD_GPIOx_OSPEEDR |= (OSPEEDR9) << OSPEEDR9_pos;// Configurar speed
+     *ptr_GPIOD_GPIOx_OSPEEDR |= (OSPEEDR8) << OSPEEDR8_pos;
+
+     *ptr_GPIOD_GPIOx_AFRH |= (AFR9) << AFR9_pos;   // configurar o alternate
+     *ptr_GPIOD_GPIOx_AFRH |= (AFR8) << AFR8_pos;
+
+     HAL_NVIC_SetPriority(USART3_IRQn, 0, 0);
+     HAL_NVIC_EnableIRQ(USART3_IRQn);
   /* USER CODE END USART3_MspInit 1 */
   }
 }

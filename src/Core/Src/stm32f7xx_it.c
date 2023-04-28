@@ -22,6 +22,10 @@
 #include "stm32f7xx_it.h"
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
+#include "function.h"
+#include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -31,7 +35,9 @@
 
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
-
+#define FIFO_LEN 512
+#define TRUE 1
+#define FALSE 0
 /* USER CODE END PD */
 
 /* Private macro -------------------------------------------------------------*/
@@ -55,6 +61,7 @@
 /* USER CODE END 0 */
 
 /* External variables --------------------------------------------------------*/
+extern TIM_HandleTypeDef htim2;
 extern UART_HandleTypeDef huart3;
 /* USER CODE BEGIN EV */
 
@@ -199,6 +206,20 @@ void SysTick_Handler(void)
 /******************************************************************************/
 
 /**
+  * @brief This function handles TIM2 global interrupt.
+  */
+void TIM2_IRQHandler(void)
+{
+  /* USER CODE BEGIN TIM2_IRQn 0 */
+
+  /* USER CODE END TIM2_IRQn 0 */
+  HAL_TIM_IRQHandler(&htim2);
+  /* USER CODE BEGIN TIM2_IRQn 1 */
+
+  /* USER CODE END TIM2_IRQn 1 */
+}
+
+/**
   * @brief This function handles USART3 global interrupt.
   */
 void USART3_IRQHandler(void)
@@ -213,5 +234,57 @@ void USART3_IRQHandler(void)
 }
 
 /* USER CODE BEGIN 1 */
+
+void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart){
+
+	uint32_t i = 0;
+
+	if(huart == &huart3){
+
+		HAL_UART_Receive_IT(&huart3, (uint8_t *)&rx_data, 1);
+		rx_buffer[w_rx_bindex&(FIFO_LEN-1)] = rx_data;
+		w_rx_bindex++;
+
+		if((rx_data == '\n') || (rx_data == '\r'))
+		{
+			new_com++;
+			delim_1[0] = rx_data;// dependendo de terminal pode estar configurado para carriage return ou new line
+
+		}else if(rx_data == '\e')
+		{
+
+		 for(i = 0; i< FIFO_LEN; i++) // Limpa o array
+		 {
+			  rx_buffer[i] = 0;
+		 }
+
+		  w_rx_bindex = 0;
+		  r_rx_bindex = 0;
+		  _push_message("ESC\rALL CLEAR\r\r>");
+		  tx_flag = TRUE; // EXSTE ALGO PARA TRANSMITIR
+		}
+		else if(rx_data == '\b')
+		{
+
+			w_rx_bindex-=2;
+			rx_buffer[w_rx_bindex&(FIFO_LEN-1)] = 0;
+			rx_buffer[(w_rx_bindex+1)&(FIFO_LEN-1)] = 0;
+		}
+	}
+}
+
+void HAL_UART_TxCpltCallback(UART_HandleTypeDef *huart){
+
+	if(huart == &huart3){
+
+		if((w_tx_bindex-r_tx_bindex) != 0)
+		{
+			tx_data = tx_buffer[r_tx_bindex&(FIFO_LEN-1)];
+			r_tx_bindex++;
+			HAL_UART_Transmit_IT(&huart3, (uint8_t *)&tx_data,1);
+
+		}
+	}
+}
 
 /* USER CODE END 1 */
