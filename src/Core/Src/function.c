@@ -11,7 +11,7 @@
 #include "gpio.h"
 #include "function.h"
 #include "stm32f7xx_hal.h"
-
+#include "heater.h"
 
 #define FALSE 0
 #define TRUE 1
@@ -23,7 +23,7 @@ volatile uint16_t w_rx_bindex = 0, r_tx_bindex = 0,  r_rx_bindex = 0, w_tx_binde
 char *comando, *token, *aux_token, *memo_comando, *memo_valid_comando, *message, temp_arr[20], *memory_ptr;
 
 void uart_commands(void){
-	static machine_state state = state_stand_by;
+
 	char *com_arr[] = {"ON"};
 
  		if(((w_rx_bindex-r_rx_bindex) != 0) && (new_com >0) ){

@@ -23,6 +23,7 @@
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 #include "function.h"
+#include "heater.h"
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
@@ -233,6 +234,20 @@ void USART3_IRQHandler(void)
   /* USER CODE END USART3_IRQn 1 */
 }
 
+/**
+  * @brief This function handles EXTI line[15:10] interrupts.
+  */
+void EXTI15_10_IRQHandler(void)
+{
+  /* USER CODE BEGIN EXTI15_10_IRQn 0 */
+
+  /* USER CODE END EXTI15_10_IRQn 0 */
+  HAL_GPIO_EXTI_IRQHandler(Start_Btn_Pin);
+  /* USER CODE BEGIN EXTI15_10_IRQn 1 */
+
+  /* USER CODE END EXTI15_10_IRQn 1 */
+}
+
 /* USER CODE BEGIN 1 */
 
 void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart){
@@ -286,5 +301,35 @@ void HAL_UART_TxCpltCallback(UART_HandleTypeDef *huart){
 		}
 	}
 }
+void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin){
+	if (GPIO_Pin == Start_Btn_Pin && state == state_stand_by){
+		state = state_green;
+		flag_Start_Btn = 1;
+		//START PWM no main do codigo
+	  }
+}
+void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim){
+//	if(htim == &htim2)
+//		tim2_int_flag = 1;
+}
+/*
+void HAL_GPIO_EXTI_Callback(uint16_t GPIO_PIN){
 
+	if(GPIO_PIN == BOTAO_Pin){
+			TIM_OC_InitTypeDef sConfigOC = {0};
+		HAL_TIM_PWM_Stop(&htim2, TIM_CHANNEL_1);
+		sConfigOC.OCMode = TIM_OCPOLARITY_HIGH;
+		duty_cycle += 5000;
+		if (duty_cycle >= 20000)
+			duty_cycle = 2500;
+		sConfigOC.Pulse = duty_cycle;
+		sConfigOC.OCPolarity = TIM_OCPOLARITY_HIGH;
+		sConfigOC.OCFastMode = TIM_OCFAST_DISABLE;
+		HAL_TIM_PWM_ConfigChannel (&htim2, &sConfigOC, TIM_CHANNEL_1);
+//		HAL_TIM_Base_Start_IT(&htim2);
+		HAL_TIM_PWM_Start(&htim2, TIM_CHANNEL_1);
+	}
+
+}
+*/
 /* USER CODE END 1 */

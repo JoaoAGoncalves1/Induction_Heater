@@ -119,7 +119,8 @@ int main(void)
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
-	  uart_commands();
+	  stand_by_mode();
+	  turn_on_heater();
   }
   /* USER CODE END 3 */
 }
