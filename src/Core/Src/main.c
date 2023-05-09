@@ -103,9 +103,9 @@ int main(void)
   MX_GPIO_Init();
   MX_USART3_UART_Init();
   MX_TIM2_Init();
+  MX_TIM4_Init();
   /* USER CODE BEGIN 2 */
-  HAL_TIM_Base_Start_IT(&htim2);
-  HAL_TIM_PWM_Start(&htim2, TIM_CHANNEL_1);
+//  HAL_TIM_PWM_Start(&htim2, TIM_CHANNEL_1);
   setvbuf(stdin, NULL, _IONBF, 0);
   HAL_UART_Receive_IT(&huart3, (uint8_t *)&rx_data, 1);
   append_char('>');
@@ -119,8 +119,8 @@ int main(void)
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
-	  stand_by_mode();
-	  turn_on_heater();
+	  main_function();
+
   }
   /* USER CODE END 3 */
 }

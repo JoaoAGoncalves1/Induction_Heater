@@ -1,2 +1,5 @@
 ../Core/Src/heater.c:16:6:stand_by_mode	8	static
-../Core/Src/heater.c:23:6:turn_on_heater	4	static
+../Core/Src/heater.c:22:6:main_function	8	static
+../Core/Src/heater.c:43:6:turn_on_heater	8	static
+../Core/Src/heater.c:48:9:Increase_PWM	48	static
+../Core/Src/heater.c:64:9:Decrease_PWM	48	static

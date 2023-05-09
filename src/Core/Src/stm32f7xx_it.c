@@ -301,6 +301,7 @@ void HAL_UART_TxCpltCallback(UART_HandleTypeDef *huart){
 		}
 	}
 }
+/*
 void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin){
 	if (GPIO_Pin == Start_Btn_Pin && state == state_stand_by){
 		state = state_green;
@@ -308,28 +309,17 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin){
 		//START PWM no main do codigo
 	  }
 }
+*/
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim){
 //	if(htim == &htim2)
 //		tim2_int_flag = 1;
-}
-/*
-void HAL_GPIO_EXTI_Callback(uint16_t GPIO_PIN){
 
-	if(GPIO_PIN == BOTAO_Pin){
-			TIM_OC_InitTypeDef sConfigOC = {0};
-		HAL_TIM_PWM_Stop(&htim2, TIM_CHANNEL_1);
-		sConfigOC.OCMode = TIM_OCPOLARITY_HIGH;
-		duty_cycle += 5000;
-		if (duty_cycle >= 20000)
-			duty_cycle = 2500;
-		sConfigOC.Pulse = duty_cycle;
-		sConfigOC.OCPolarity = TIM_OCPOLARITY_HIGH;
-		sConfigOC.OCFastMode = TIM_OCFAST_DISABLE;
-		HAL_TIM_PWM_ConfigChannel (&htim2, &sConfigOC, TIM_CHANNEL_1);
-//		HAL_TIM_Base_Start_IT(&htim2);
-		HAL_TIM_PWM_Start(&htim2, TIM_CHANNEL_1);
+}
+void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin){
+
+	if (GPIO_Pin == Start_Btn_Pin){
+		flag_Start_Btn = 1;
 	}
 
 }
-*/
 /* USER CODE END 1 */

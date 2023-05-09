@@ -43,14 +43,6 @@ void uart_commands(void){
 
 			switch(find_com(com_arr, token, 27)){
 			case 0:
-				if (state == state_stand_by || state == state_yellow){
-						//Start PWM
-						//Start medidodres de tem
-					turn_on_heater();
-					break;
-				}
-				else
-					_push_message("Erro");
 
 				break;
 				default:

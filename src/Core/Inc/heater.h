@@ -15,10 +15,11 @@ typedef enum machine_state_{
 	state_red 		//estado de perigo
 }machine_state;
 
-extern volatile machine_state state;
 extern uint8_t flag_Start_Btn;
 
+void main_function(); 	//all states will be set on this function
 void stand_by_mode();
 void turn_on_heater();
-
+uint8_t Increase_PWM(uint8_t duty_cycle);
+uint8_t Decrease_PWM(uint8_t duty_cycle);
 #endif /* INC_HEATER_H_ */

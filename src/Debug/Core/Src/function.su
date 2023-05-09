@@ -1,6 +1,6 @@
 ../Core/Src/function.c:25:6:uart_commands	16	static
-../Core/Src/function.c:71:6:_push_message	32	static
-../Core/Src/function.c:84:6:append_char	16	static
-../Core/Src/function.c:89:6:start_tx	8	static
-../Core/Src/function.c:97:7:_my_strtok	24	static
-../Core/Src/function.c:108:9:find_com	32	static
+../Core/Src/function.c:63:6:_push_message	32	static
+../Core/Src/function.c:76:6:append_char	16	static
+../Core/Src/function.c:81:6:start_tx	8	static
+../Core/Src/function.c:89:7:_my_strtok	24	static
+../Core/Src/function.c:100:9:find_com	32	static
